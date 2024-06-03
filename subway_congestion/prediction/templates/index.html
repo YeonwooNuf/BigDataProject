@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>지하철 혼잡도 예측</title>
+</head>
+<body>
+    <h1>지하철 혼잡도 예측</h1>
+    <form action="/predict/" method="post">
+        {% csrf_token %}
+        출발역:
+        <select name="start_station">
+            {% for station in stations %}
+            <option value="{{ station }}">{{ station }}</option>
+            {% endfor %}
+        </select>
+        목적지:
+        <select name="end_station">
+            {% for station in stations %}
+            <option value="{{ station }}">{{ station }}</option>
+            {% endfor %}
+        </select>
+        행선지:
+        <select name="direction">
+            <option value="방화">방화</option>
+            <option value="하남검단산">하남검단산</option>
+            <option value="마천">마천</option>
+        </select>
+        시간대:
+        <input type="text" name="time_slot" />
+        요일:
+        <input type="text" name="day_of_week" />
+        <input type="submit" value="예측하기" />
+    </form>
+</body>
+</html>
