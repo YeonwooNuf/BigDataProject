@@ -1,9 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.http import HttpResponse
 import pandas as pd
 import joblib
 import os
+
+def endpoint_function(request):
+    return HttpResponse("Hello, world. This is the API endpoint.")
 
 class PredictView(APIView):
     def post(self, request, *args, **kwargs):

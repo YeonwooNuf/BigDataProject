@@ -4,7 +4,7 @@ from sklearn.linear_model import LogisticRegression
 import joblib
 
 # 데이터 파일 읽기
-file_path = 'C:\\Users\\JangYeonWoo\\Desktop\\MachineLearning\\TermProject\\train_time.csv'
+file_path = 'C:\\GitHub\\BigDataProject\\filtered_train_time.csv'
 data = pd.read_csv(file_path, encoding='euc-kr')
 
 # 데이터 확인

@@ -10,7 +10,7 @@ function App() {
 
   const handlePredict = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/api/predict/', {
+      const response = await axios.post('http://localhost:8000/endpoint/', {
         stationName,
         dayOfWeek,
         timeSlot
