@@ -21,15 +21,63 @@
         </select>
         행선지:
         <select name="direction">
-            <option value="방화">방화</option>
-            <option value="하남검단산">하남검단산</option>
-            <option value="마천">마천</option>
+            <option value="방화-하남검단산">방화-하남검단산</option>
+            <option value="방화-마천">방화-마천</option>
+            <option value="하남검단산-방화">하남검단산-방화</option>
+            <option value="하남검단산-마천">하남검단산-마천</option>
+            <option value="마천-방화">마천-방화</option>
+            <option value="마천-하남검단산">마천-하남검단산</option>
         </select>
-        시간대:
-        <input type="text" name="time_slot" />
-        요일:
-        <input type="text" name="day_of_week" />
+        <br>
+        <label for="time_slot">시간대:</label>
+        <select name="time_slot" id="time_slot">
+            <option value="06시 이전">06시 이전</option>
+            <option value="06시-07시">06시-07시</option>
+            <option value="07시-08시">07시-08시</option>
+            <option value="08시-09시">08시-09시</option>
+            <option value="09시-10시">09시-10시</option>
+            <option value="10시-11시">10시-11시</option>
+            <option value="11시-12시">11시-12시</option>
+            <option value="12시-13시">12시-13시</option>
+            <option value="13시-14시">13시-14시</option>
+            <option value="14시-15시">14시-15시</option>
+            <option value="15시-16시">15시-16시</option>
+            <option value="16시-17시">16시-17시</option>
+            <option value="17시-18시">17시-18시</option>
+            <option value="18시-19시">18시-19시</option>
+            <option value="19시-20시">19시-20시</option>
+            <option value="20시-21시">20시-21시</option>
+            <option value="21시-22시">21시-22시</option>
+            <option value="22시-23시">22시-23시</option>
+            <option value="23시-24시">23시-24시</option>
+            <option value="24시 이후">24시 이후</option>
+        </select>
+        <br>
+        <label for="day_of_week">요일:</label>
+        <select name="day_of_week" id="day_of_week">
+            <option value="월">월요일</option>
+            <option value="화">화요일</option>
+            <option value="수">수요일</option>
+            <option value="목">목요일</option>
+            <option value="금">금요일</option>
+            <option value="토">토요일</option>
+            <option value="일">일요일</option>
+        </select>
+        <br>
         <input type="submit" value="예측하기" />
     </form>
+
+    <script>
+        var stationsList = JSON.parse('{{ stations_json|escapejs }}');
+        document.getElementById("predictionForm").addEventListener("submit", function(event) {
+            var startStation = document.querySelector("select[name='start_station']").value;
+            var endStation = document.querySelector("select[name='end_station']").value;
+            if (!stationsList.includes(startStation) || !stationsList.includes(endStation)) {
+                alert("출발 또는 도착 역이 경로에 없습니다. 다시 확인해주세요.");
+                event.preventDefault();
+            }
+        });
+    </script>
+
 </body>
 </html>
