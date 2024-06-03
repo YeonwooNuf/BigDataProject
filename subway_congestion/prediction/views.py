@@ -1,12 +1,17 @@
 from django.shortcuts import render
 import pandas as pd
 import joblib
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # 모델 로드
-model = joblib.load('prediction/congestion_model.pkl')
+model_path = os.path.join(BASE_DIR, 'prediction', 'C:\\BigDataProject\\subway_congestion\\prediction\\congestion_model.pkl')
+model = joblib.load(model_path)
 
 # 데이터 로드
-data = pd.read_csv('data/filtered_train_time.csv')
+data_path = os.path.join(BASE_DIR, 'data', 'C:\\BigDataProject\\subway_congestion\data\\filtered_train_time.csv')
+data = pd.read_csv(data_path)
 stations = data['역명'].unique()
 
 def index(request):
@@ -27,7 +32,7 @@ def predict(request):
         '을지로4가', '동대문역사공원(DDP)', '청구', '신금호', '행당', '왕십리(성동구청)', '마장',
         '답십리', '장한평', '군자(능동)', '아차산(어린이대공원후문)', '광나루(장신대)', '천호(풍납토성)',
         '강동', '길동', '굽은다리(강동구민회관앞)', '명일', '고덕', '상일동', '강일', '미사', '하남풍산',
-         '하남시청(덕풍·신장)', '하남검단산'],
+        '하남시청(덕풍·신장)', '하남검단산'],
 
         '방화-마천': ['방화', '개화산', '김포공항', '송정', '마곡', '발산', '우장산', '화곡', '까치산',
         '신정(은행정)', '목동', '오목교(목동운동장앞)', '양평', '영등포구청', '영등포시장', '신길', '여의도',
@@ -73,20 +78,22 @@ def predict(request):
         relevant_stations = route[end_index:start_index+1][::-1]
 
     # 혼잡도 예측
-    congestion = 0
+    혼잡도 = 0
     for station in relevant_stations:
         station_data = data[(data['역명'] == station) & (data['날짜'] == day_of_week)]
-        features = station_data[['역번호', time_slot]]
-        if not features.empty:
-            prediction = model.predict(features)
+        if not station_data.empty:
+            station_data_encoded = pd.get_dummies(station_data['시간대'])
+            station_data_encoded = station_data_encoded.reindex(columns=model.feature_names_in_, fill_value=0)
+            prediction = model.predict(station_data_encoded)
             # 혼잡도 계산
             if prediction[0] >= 2000:
-                congestion += 100
+                혼잡도 += 100
             elif prediction[0] >= 1000:
-                congestion += 50
+                혼잡도 += 50
             elif prediction[0] >= 500:
-                congestion += 25
+                혼잡도 += 25
             elif prediction[0] > 0:
-                congestion += 10
+                혼잡도 += 10
     
-    return render(request, 'result.html', {'congestion': congestion})
+    return render(request, 'result.html', {'congestion': 혼잡도})
+
